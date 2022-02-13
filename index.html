@@ -1,27 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="utf-8">
-    <title>Life cycle callbacks test</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
     <style>
-        custom-square {
-            margin: 20px;
+        p{
+            color: green;
+        }
+        pt-demo-greetings{
+            margin: 10px auto;
+            height: 300px;
+            border: 1px solid black;
+            width: 100%;
+            padding: 12px;
+            background-color: yellow;
+            display: block;
+            --pt-demo-greetings-font-family: 'Brush Script MT', cursive;
         }
     </style>
-    <script defer
-            src="js/main.js"></script>
-</head>
-
-<body>
-    <h1>Life cycle callbacks test</h1>
-
-    <div>
-        <button class="add">Add custom-square to DOM</button>
-        <button class="update">Update attributes</button>
-        <button class="remove">Remove custom-square from DOM</button>
-    </div>
-
+    <template id="pt-demo-greetings">
+        <style>
+            :host p{
+                all: initial; /* 1st rule so subsequent properties are reset. */
+                color: red;
+                font-family: var(--pt-demo-greetings-font-family, 'Verdana');
+            }
+            ::slotted(p){
+                padding: 8px;
+                border: 1px solid black;
+                width: 200px;
+            }
+        </style>
+        <header>
+            <h1>Hello Web Components</h1>
+            <p>Inside shadow root</p>
+        </header>
+        <slot name="slot1">Fallback1</slot>
+        <slot>Fallback2</slot>
+    </template>
+    <script src="./js/main.js"></script>
+    <my-greetings open="true"></my-greetings>
+    <button is="custom-button" height="50"></button>
+    <pt-demo-greetings>
+        <p slot="slot1">User Code1</p>
+        <p>User Code2</p>
+    </pt-demo-greetings>
+    <!-- <show-name name="Babua"><p>ShowName Demo</p></show-name> -->
 </body>
-
 </html>

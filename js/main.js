@@ -1,205 +1,130 @@
-// Create a class for the element
-
-class DemoText extends HTMLElement {
+class MyGreetings extends HTMLElement {
   constructor() {
     super();
-    const shadow = this.attachShadow({ mode: 'open' });
-    const wrapper = document.createElement('div');
-    wrapper.setAttribute('class', 'wrapper');
-    const text = document.createElement('p');
-    text.textContent = "hi there";
-    wrapper.appendChild(text);
-    shadow.appendChild(wrapper);
+    console.log("Hello MyGreetings");
+    // this.addEventListener('click',e=>{
+    //   alert('hello web component');
+    //   this.id="my-greetings";
+    //   if(this.disabled){
+    //     this.disabled='';
+    //   } else{
+    //     this.disabled = true;
+    //   }
+    //   if(this.Open){
+    //     this.removeAttribute('open');
+    //   } else{
+    //     this.setAttribute('open', true);
+    //   }
+    // })
   }
-  connectedCallback() {
-    const shadow = this.shadowRoot;
-    const style = document.createElement('style');
-    style.textContent = `
-            .wrapper{
-                border: 1px solid black;
-            }
-        `;
-    shadow.appendChild(style);
-    console.log('connectedCallback ----');
-  }
-  disconnectedCallback() {
-    console.log('connectedCallback ----');
-  }
-  adoptedCallback() {
-    console.log('adoptedCallback ----');
-  }
-  attributeChangedCallback() {
-    console.log('attributeChangedCallback ----');
-  }
-}
-class PopUpInfo extends HTMLElement {
-  constructor() {
-    // Always call super first in constructor
-    super();
-
-    // Create a shadow root
-    const shadow = this.attachShadow({ mode: 'open' });
-
-    // Create spans
-    const wrapper = document.createElement('span');
-    wrapper.setAttribute('class', 'wrapper');
-
-    const icon = document.createElement('span');
-    icon.setAttribute('class', 'icon');
-    icon.setAttribute('tabindex', 0);
-
-    const info = document.createElement('span');
-    info.setAttribute('class', 'info');
-
-    // Take attribute content and put it inside the info span
-    const text = this.getAttribute('data-text');
-    info.textContent = text;
-
-    // Insert icon
-    let imgUrl;
-    if (this.hasAttribute('img')) {
-      imgUrl = this.getAttribute('img');
-    } else {
-      imgUrl = 'img/default.png';
-    }
-
-    const img = document.createElement('img');
-    img.src = imgUrl;
-    icon.appendChild(img);
-
-    // Create some CSS to apply to the shadow dom
-    const style = document.createElement('style');
-    console.log(style.isConnected);
-
-    style.textContent = `
-        .wrapper {
-          position: relative;
-        }
-  
-        .info {
-          font-size: 0.8rem;
-          width: 200px;
-          display: inline-block;
-          border: 1px solid black;
-          padding: 10px;
-          background: white;
-          border-radius: 10px;
-          opacity: 0;
-          transition: 0.6s all;
-          position: absolute;
-          bottom: 20px;
-          left: 10px;
-          z-index: 3;
-        }
-  
-        img {
-          width: 1.2rem;
-        }
-  
-        .icon:hover + .info, .icon:focus + .info {
-          opacity: 1;
-        }
-      `;
-
-    // Attach the created elements to the shadow dom
-    shadow.appendChild(style);
-    console.log(style.isConnected);
-    shadow.appendChild(wrapper);
-    wrapper.appendChild(icon);
-    wrapper.appendChild(info);
-  }
-}
-
-// Create a class for the element
-class Square extends HTMLElement {
-  // Specify observed attributes so that
-  // attributeChangedCallback will work
   static get observedAttributes() {
-    return ['c', 'l'];
+    return ["open"];
   }
 
-  constructor() {
-    // Always call super first in constructor
-    super();
-
-    const shadow = this.attachShadow({ mode: 'open' });
-
-    const div = document.createElement('div');
-    const style = document.createElement('style');
-    shadow.appendChild(style);
-    shadow.appendChild(div);
+  get open() {
+    return this.getAttribute("open");
   }
-
-  connectedCallback() {
-    console.log('Custom square element added to page.');
-    updateStyle(this);
-  }
-
-  disconnectedCallback() {
-    console.log('Custom square element removed from page.');
-  }
-
-  adoptedCallback() {
-    console.log('Custom square element moved to new page.');
-  }
-
-  attributeChangedCallback(name, oldValue, newValue) {
-    console.log('Custom square element attributes changed.');
-    updateStyle(this);
-  }
-}
-
-customElements.define('custom-square', Square);
-
-function updateStyle(elem) {
-  const shadow = elem.shadowRoot;
-  shadow.querySelector('style').textContent = `
-    div {
-      width: ${elem.getAttribute('l')}px;
-      height: ${elem.getAttribute('l')}px;
-      background-color: ${elem.getAttribute('c')};
+  set open(value) {
+    if (value) {
+      this.setAttribute("open", value);
+    } else {
+      this.removeAttribute("open");
     }
-  `;
+  }
+  // get disabled(){
+  //   return this.hasAttribute('disabled');
+  // }
+  // set disabled(val){
+  //   if(val){
+  //     this.setAttribute('disabled', '');
+  //   } else{
+  //     this.removeAttribute('disabled');
+  //   }
+  // }
+  connectedCallback() {
+    console.log("connected");
+    // const styleElem = document.createElement('style');
+    // this.innerHTML=`
+    //   <div>
+    //     <p class="myText">Ello</p>
+    //   </div>
+    // `;
+    // styleElem.innerText=`
+    //   .myText{
+    //     border: 1px solid red;
+    //   }
+    // `;
+    // this.appendChild(styleElem);
+  }
+  attributeChangedCallback(name, oldVal, newVal) {
+    console.log(
+      `Attr ${name} has changed from ${oldVal} to ${newVal} and ${typeof newVal}`
+    );
+  }
 }
 
-const add = document.querySelector('.add');
-const update = document.querySelector('.update');
-const remove = document.querySelector('.remove');
-let square;
+// class ShowName extends HTMLElement{
+//   constructor(){
+//     super();
+//     const shaRoot = this.attachShadow({mode: 'open'});
+//     const tmpl = document.createElement('template');
+//     tmpl.innerHTML = `
+//       <slot></slot>
+//       <div id="showName">
+//         <p>${this.name}</p>
+//       </div>
+//       `;
+//     shaRoot.appendChild(tmpl.content.cloneNode(true));
+//   }
+//   get name(){
+//     if(this.hasAttribute('name')){
+//       return this.getAttribute('name');
+//     } else{
+//       return 'actual demo';
+//     }
+//   }
+// }
+//window.customElements.define('show-name',ShowName);
 
-update.disabled = true;
-remove.disabled = true;
+customElements.whenDefined("my-greetings").then(() => {
+  console.log("my-greetings upgraded");
+});
 
-function random(min, max) {
-  return Math.floor(Math.random() * (max - min + 1) + min);
+window.customElements.define("my-greetings", MyGreetings);
+
+class CustomButton extends HTMLButtonElement {
+  constructor(height) {
+    console.log(`The height is ${height}`);
+    super();
+    console.log("This is custom button");
+  }
+  connectedCallback() {
+    this.textContent = "hello";
+  }
+}
+window.customElements.define("custom-button", CustomButton, {
+  extends: "button",
+});
+
+// Shadow DOM
+const elem = document.createElement("header");
+const h1 = document.createElement("h1");
+h1.innerText = "Welcome to Ohana";
+const shadow = elem.attachShadow({ mode: "closed" });
+shadow.appendChild(h1);
+document.body.appendChild(elem);
+
+class PtDemoGreetings extends HTMLElement {
+  constructor() {
+    super();
+    console.log(`Instantiating PtDemoGreetings`);
+  }
+  connectedCallback(){
+    const temp = document.querySelector('#pt-demo-greetings');
+    const tempElem = temp.content.cloneNode(true);
+    const shadow = this.attachShadow({mode:'open'});
+    shadow.appendChild(tempElem);
+  }
 }
 
-add.onclick = function () {
-  // Create a custom square element
-  square = document.createElement('custom-square');
-  square.setAttribute('l', '100');
-  square.setAttribute('c', 'red');
-  document.body.appendChild(square);
-
-  update.disabled = false;
-  remove.disabled = false;
-  add.disabled = true;
-};
-
-update.onclick = function () {
-  // Randomly update square's attributes
-  square.setAttribute('l', random(50, 200));
-  square.setAttribute('c', `rgb(${random(0, 255)}, ${random(0, 255)}, ${random(0, 255)})`);
-};
-
-remove.onclick = function () {
-  // Remove the square
-  document.body.removeChild(square);
-
-  update.disabled = true;
-  remove.disabled = true;
-  add.disabled = false;
-};
-// Define the new element
-customElements.define('popup-info', PopUpInfo);
-customElements.define('demo-text', DemoText);
+window.customElements.define('pt-demo-greetings',PtDemoGreetings);
